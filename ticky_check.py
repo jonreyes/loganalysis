@@ -2,6 +2,7 @@
 import os
 import re
 import operator
+import csv
 os.system("cat syslog.log > temp.log")
 f = open("temp.log","r+")
 errors = []
@@ -30,5 +31,10 @@ for error in errors:
 	errorcount[error] = 0
 for error in errors:
 	errorcount[error] += 1
-print(sorted(errorcount.items(),key=operator.itemgetter(1),reverse=True))
-
+errorcount = sorted(errorcount.items(),key=operator.itemgetter(1),reverse=True)
+with open("error_message.csv","w",newline="") as em_file:
+	writer = csv.writer(em_file)
+	writer.writerow(["Error","Count"])
+	for key,value in errorcount:
+		writer.writerow([key,value])
+em_file.close()
